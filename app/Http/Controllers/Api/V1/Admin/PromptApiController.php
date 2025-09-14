@@ -8,8 +8,9 @@ use App\Http\Requests\StorePromptRequest;
 use App\Http\Requests\UpdatePromptRequest;
 use App\Http\Resources\Admin\PromptResource;
 use App\Models\Prompt;
-use Gate;
+// use Gate;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 use Symfony\Component\HttpFoundation\Response;
 
 class PromptApiController extends Controller
@@ -18,9 +19,14 @@ class PromptApiController extends Controller
 
     public function index()
     {
-        abort_if(Gate::denies('prompt_access'), Response::HTTP_FORBIDDEN, '403 Forbidden');
+        // dd(auth()->user()->roles);
+        // abort_if(Gate::denies('prompt_access'), Response::HTTP_FORBIDDEN, '403 Forbidden');
+        // abort_unless(auth()->user()->can('prompt_access'), Response::HTTP_FORBIDDEN, '403 Forbidden');
+        // return new PromptResource(Prompt::with(['ai_platforms'])->get());
 
-        return new PromptResource(Prompt::with(['ai_platforms'])->get());
+        $prompts = Prompt::with(['ai_platforms'])->get();
+
+        return PromptResource::collection($prompts);
     }
 
     public function store(StorePromptRequest $request)
