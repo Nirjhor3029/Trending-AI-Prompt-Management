@@ -8,8 +8,9 @@ use App\Http\Requests\StoreUserRequest;
 use App\Http\Requests\UpdateUserRequest;
 use App\Models\Role;
 use App\Models\User;
-use Gate;
+// use Gate;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 use Symfony\Component\HttpFoundation\Response;
 
 class UsersController extends Controller
@@ -64,6 +65,7 @@ class UsersController extends Controller
         abort_if(Gate::denies('user_show'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
         $user->load('roles');
+        // return $user;
 
         return view('admin.users.show', compact('user'));
     }
@@ -86,5 +88,21 @@ class UsersController extends Controller
         }
 
         return response(null, Response::HTTP_NO_CONTENT);
+    }
+
+
+
+
+    public function generateToken(User $user)
+    {
+        // Delete all tokens with name 'public-app-token' for this user
+        $user->tokens()->where('name', 'public-app-token')->delete();
+        // Generate a token
+        $token = $user->createToken('public-app-token')->plainTextToken;
+
+        // Optionally store in session or just return as JSON
+        return response()->json([
+            'token' => $token
+        ]);
     }
 }

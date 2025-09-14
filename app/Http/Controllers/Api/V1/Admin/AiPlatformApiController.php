@@ -7,8 +7,9 @@ use App\Http\Requests\StoreAiPlatformRequest;
 use App\Http\Requests\UpdateAiPlatformRequest;
 use App\Http\Resources\Admin\AiPlatformResource;
 use App\Models\AiPlatform;
-use Gate;
+// use Gate;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 use Symfony\Component\HttpFoundation\Response;
 
 class AiPlatformApiController extends Controller

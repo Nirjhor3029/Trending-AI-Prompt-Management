@@ -1,5 +1,9 @@
 <?php
 
+use App\Http\Controllers\Admin\UsersController;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Route;
+
 Route::redirect('/', '/login');
 Route::get('/home', function () {
     if (session('status')) {
@@ -22,6 +26,7 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'namespace' => 'Admin', 'mi
     Route::resource('roles', 'RolesController');
 
     // Users
+    Route::post('/users/{user}/generate-token', [UsersController::class, 'generateToken'])->name('users.generate-token');
     Route::delete('users/destroy', 'UsersController@massDestroy')->name('users.massDestroy');
     Route::resource('users', 'UsersController');
 
